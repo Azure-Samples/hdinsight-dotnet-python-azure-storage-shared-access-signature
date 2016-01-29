@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="sas.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="StorageConnectionString" Type="System.String" Scope="User">
+      <Value Profile="(Default)">DefaultEndpointsProtocol=https;AccountName=myaccount;AccountKey=mykey</Value>
+    </Setting>
+    <Setting Name="ContainerName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">mycontainer</Value>
+    </Setting>
+    <Setting Name="SASPolicyName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">mypolicy</Value>
+    </Setting>
+    <Setting Name="FileToUpload" Type="System.String" Scope="User">
+      <Value Profile="(Default)">..\\..\\..\\..\\sampledata\\sample.log</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
