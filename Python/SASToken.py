@@ -4,8 +4,8 @@ from azure.storage.blob import BlobService, ContainerSharedAccessPermissions
 # The name of the new Shared Access policy
 policy_name = 'readandlistonly'
 # The Storage Account Name
-storage_account_name = 'myaccountname'
-storage_account_key = 'mykey'
+storage_account_name = 'larryfrstore'
+storage_account_key = 'Vm7YUAvuKQFjNSv2xY3ckgxwLUMkECUHNFF09lipZY2QxNgTFDHbA7o4U6joHXg+/Wd23sHkukjZUp41siTtwQ=='
 storage_container_name = 'mycontainer'
 example_file_path = '..\\sampledata\\sample.log'
 
@@ -49,4 +49,4 @@ sas_token = blob_service.generate_shared_access_signature(
 )
 
 # Print out the new token
-print sas_token
+print(sas_token)
