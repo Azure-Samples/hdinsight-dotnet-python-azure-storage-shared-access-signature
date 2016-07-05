@@ -7,11 +7,11 @@ $resourceGroupName = 'myresourcegroup'
 # Replace with the Azure data center you want to the cluster to live in
 $location = 'North Europe'
 # Replace with the name of the default storage account to be created
-$defaultStorageAccountName = 'mystorageaccount'
+$defaultStorageAccountName = 'defaultstorageaccount'
 # Replace with the name of the SAS container created earlier
-$SASContainerName = 'sascontainer'
+$SASContainerName = 'mycontainer'
 # Replace with the name of the SAS storage account created earlier
-$SASStorageAccountName = 'sasaccount'
+$SASStorageAccountName = 'sasstoreage'
 # Replace with the SAS token generated earlier
 $SASToken = 'sastoken'
 # Set the number of worker nodes in the cluster
@@ -28,10 +28,7 @@ New-AzureRmStorageAccount `
     -Name $defaultStorageAccountName `
     -Location $location `
     -Type Standard_GRS
-$defaultStorageAccountKey = Get-AzureRmStorageAccountKey `
-    -ResourceGroupName $resourceGroupName `
-    -Name $defaultStorageAccountName `
-    |  %{ $_.Key1 }
+$defaultStorageAccountKey = (Get-AzureRmStorageAccountKey -ResourceGroupName $resourceGroupName -Name $defaultStorageAccountName)[0].Value
 $defaultStorageContext = New-AzureStorageContext `
     -StorageAccountName $defaultStorageAccountName `
     -StorageAccountKey $defaultStorageAccountKey
@@ -67,6 +64,7 @@ if($osType -eq 'linux') {
         -ClusterSizeInNodes $clusterSizeInNodes `
         -ClusterType Hadoop `
         -OSType Linux `
+        -Version "3.4" `
         -HttpCredential $httpCredential `
         -SshCredential $sshCredential
 } else {
@@ -79,5 +77,6 @@ if($osType -eq 'linux') {
         -ClusterSizeInNodes $clusterSizeInNodes `
         -ClusterType Hadoop `
         -OSType Windows `
+        -Version "3.3" `
         -HttpCredential $httpCredential
 }
