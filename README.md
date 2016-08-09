@@ -33,6 +33,8 @@ You can use either the __SASExample__ solution (C#) or __SASToken.py__ (Python) 
 
 ### Using SASToken.py (Python)
 
+Note: This currently requires 0.32.0 of the Azure Storage SDK for Python.
+
 1. Open the `SASToken.py` file (in the `Python` directory of this repository,) and change the following values:
 
     * policy\_name: The name to use for the stored policy that will be created.
