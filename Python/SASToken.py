@@ -1,5 +1,9 @@
-from azure.storage import AccessPolicy, SharedAccessPolicy, SignedIdentifier, SignedIdentifiers
-from azure.storage.blob import BlobService, ContainerSharedAccessPermissions
+import time
+
+from azure.storage import AccessPolicy
+from azure.storage.blob import BlockBlobService, ContentSettings, ContainerPermissions
+
+from datetime import datetime, timedelta
 
 # The name of the new Shared Access policy
 policy_name = 'readandlistonly'
@@ -8,44 +12,44 @@ storage_account_name = 'mystore'
 storage_account_key = 'mykey'
 storage_container_name = 'mycontainer'
 example_file_path = '..\\sampledata\\sample.log'
+policy_name = 'mysaspolicy'
 
 # Create the blob service, using the name and key for your Azure Storage account
-blob_service = BlobService(storage_account_name, storage_account_key)
+blob_service = BlockBlobService(storage_account_name, storage_account_key)
 
 # Create the container, if it does not already exist
 blob_service.create_container(storage_container_name)
 
 # Upload an example file to the container
-blob_service.put_block_blob_from_path(
+blob_service.create_blob_from_path(
     storage_container_name,
     'sample.log',
     example_file_path,
 )
 
-# Create a new signed identifier (policy)
-si = SignedIdentifier()
-# Set the name
-si.id = policy_name
-# Set the expiration date
-si.access_policy.expiry = '2016-01-01'
-# Set the permissions. Read and List in this example
-si.access_policy.permission = ContainerSharedAccessPermissions.READ + ContainerSharedAccessPermissions.LIST
+# Create a new policy that expires after a week
+access_policy = AccessPolicy(permission=ContainerPermissions.READ + ContainerPermissions.LIST, expiry=datetime.utcnow() + timedelta(weeks=1))
 
-# Get the existing signed identifiers (policies) for the container
+
+
+# Get the existing identifiers (policies) for the container
 identifiers = blob_service.get_container_acl(storage_container_name)
-# And append the new one ot the list
-identifiers.signed_identifiers.append(si)
+# And add the new one ot the list
+identifiers[policy_name] = access_policy
 
-# Set the container to the updated list of signed identifiers (policies)
+# Set the container to the updated list of identifiers (policies)
 blob_service.set_container_acl(
-    container_name=storage_container_name,
-    signed_identifiers=identifiers,
+    storage_container_name,
+    identifiers,
 )
 
-# Generate a new Shared Access Signature token using the 
-sas_token = blob_service.generate_shared_access_signature(
-    container_name=storage_container_name,
-    shared_access_policy=SharedAccessPolicy(signed_identifier=policy_name),
+# Wait 30 seconds for acl to propagate
+time.sleep(30)
+
+# Generate a new Shared Access Signature token using the policy (by name)
+sas_token = blob_service.generate_container_shared_access_signature(
+    storage_container_name,
+    id=policy_name,
 )
 
 # Print out the new token
